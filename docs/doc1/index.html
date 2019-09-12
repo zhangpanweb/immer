@@ -1,0 +1,705 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Latin-ish · Immer</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="- NPM: `npm install immer`"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Latin-ish · Immer"/><meta property="og:type" content="website"/><meta property="og:url" content="https://immerjs.github.io/immer/"/><meta property="og:description" content="- NPM: `npm install immer`"/><meta property="og:image" content="https://immerjs.github.io/immer/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://immerjs.github.io/immer/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/immer/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/immer/js/scrollSpy.js"></script><link rel="stylesheet" href="/immer/css/main.css"/><script src="/immer/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/immer/"><img class="logo" src="/immer/img/favicon.ico" alt="Immer"/><h2 class="headerTitleWithLogo">Immer</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive siteNavItemActive"><a href="/immer/docs/doc1" target="_self">Docs</a></li><li class=""><a href="/immer/help" target="_self">Help</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Docusaurus</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Docusaurus</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/immer/docs/doc1">Example Page</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Latin-ish</h1></header><article><div><span><ul>
+<li>NPM: <code>npm install immer</code></li>
+<li>Yarn: <code>yarn add immer</code></li>
+<li>CDN: Exposed global is <code>immer</code>
+<ul>
+<li>Unpkg: <code>&lt;script src=&quot;https://unpkg.com/immer/dist/immer.umd.js&quot;&gt;&lt;/script&gt;</code></li>
+<li>JSDelivr: <code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/immer/dist/immer.umd.js&quot;&gt;&lt;/script&gt;</code></li>
+</ul></li>
+</ul>
+<hr>
+<ul>
+<li>Egghead lesson covering all of immer (7m): <a href="https://egghead.io/lessons/redux-simplify-creating-immutable-data-trees-with-immer">Simplify creating immutable data trees with Immer</a></li>
+<li>Introduction blogpost: <a href="https://medium.com/@mweststrate/introducing-immer-immutability-the-easy-way-9d73d8f71cb3">Immer: Immutability the easy way</a></li>
+</ul>
+<p>Immer (German for: always) is a tiny package that allows you to work with immutable state in a more convenient way. It is based on the <a href="https://en.wikipedia.org/wiki/Copy-on-write"><em>copy-on-write</em></a> mechanism.</p>
+<p>The basic idea is that you will apply all your changes to a temporary <em>draftState</em>, which is a proxy of the <em>currentState</em>. Once all your mutations are completed, Immer will produce the <em>nextState</em> based on the mutations to the draft state. This means that you can interact with your data by simply modifying it while keeping all the benefits of immutable data.</p>
+<p><img src="images/hd/immer.png" alt="immer-hd.png"></p>
+<p>Using Immer is like having a personal assistant; he takes a letter (the current state) and gives you a copy (draft) to jot changes onto. Once you are done, the assistant will take your draft and produce the real immutable, final letter for you (the next state).</p>
+<p>A mindful reader might notice that this is quite similar to <code>withMutations</code> of ImmutableJS. It is indeed, but generalized and applied to plain, native JavaScript data structures (arrays and objects) without further needing any library.</p>
+<h2><a class="anchor" aria-hidden="true" id="external-resources"></a><a href="#external-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>External resources</h2>
+<ul>
+<li>Blog: <a href="https://www.netlify.com/blog/2018/09/12/the-rise-of-immer-in-react/">The Rise of Immer in React</a></li>
+<li>Blog: by Workday Prism on why they picked Immer to manage immutable state <a href="https://medium.com/workday-engineering/workday-prism-analytics-the-search-for-a-strongly-typed-immutable-state-a09f6768b2b5">The Search for a Strongly-Typed, Immutable State</a></li>
+<li>Blog: <a href="https://daveceddia.com/react-redux-immutability-guide/">Immutability in React and Redux: The Complete Guide</a></li>
+<li>Video tutorial: <a href="https://codedaily.io/screencasts/86/Immutable-Data-with-Immer-and-React-setState">Using Immer with React.setState</a></li>
+<li><a href="https://www.youtube.com/watch?v=-gJbS7YjcSo">Talk</a> + <a href="http://immer.surge.sh/">slides</a> on Immer at React Finland 2018 by Michel Weststrate</li>
+<li><a href="https://www.youtube.com/watch?v=bFuRvcAEiHg&amp;feature=youtu.be">ForwardJS 2019: Immutability is Changing - From Immutable.js to Immer</a> by <a href="https://twitter.com/swyx/">shawn swyx wang</a></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="api"></a><a href="#api" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>API</h2>
+<p>The Immer package exposes a default function that does all the work.</p>
+<p><code>produce(currentState, producer: (draftState) =&gt; void): nextState</code></p>
+<p>There is also a curried overload that is explained <a href="#currying">below</a>.</p>
+<h2><a class="anchor" aria-hidden="true" id="example"></a><a href="#example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example</h2>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> baseState = [
+    {
+        <span class="hljs-attr">todo</span>: <span class="hljs-string">"Learn typescript"</span>,
+        <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span>
+    },
+    {
+        <span class="hljs-attr">todo</span>: <span class="hljs-string">"Try immer"</span>,
+        <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>
+    }
+]
+
+<span class="hljs-keyword">const</span> nextState = produce(baseState, draftState =&gt; {
+    draftState.push({<span class="hljs-attr">todo</span>: <span class="hljs-string">"Tweet about it"</span>})
+    draftState[<span class="hljs-number">1</span>].done = <span class="hljs-literal">true</span>
+})
+</code></pre>
+<p>The interesting thing about Immer is that the <code>baseState</code> will be untouched, but the <code>nextState</code> will reflect all changes made to <code>draftState</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// the new item is only added to the next state,</span>
+<span class="hljs-comment">// base state is unmodified</span>
+expect(baseState.length).toBe(<span class="hljs-number">2</span>)
+expect(nextState.length).toBe(<span class="hljs-number">3</span>)
+
+<span class="hljs-comment">// same for the changed 'done' prop</span>
+expect(baseState[<span class="hljs-number">1</span>].done).toBe(<span class="hljs-literal">false</span>)
+expect(nextState[<span class="hljs-number">1</span>].done).toBe(<span class="hljs-literal">true</span>)
+
+<span class="hljs-comment">// unchanged data is structurally shared</span>
+expect(nextState[<span class="hljs-number">0</span>]).toBe(baseState[<span class="hljs-number">0</span>])
+<span class="hljs-comment">// changed data not (dûh)</span>
+expect(nextState[<span class="hljs-number">1</span>]).not.toBe(baseState[<span class="hljs-number">1</span>])
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="benefits"></a><a href="#benefits" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Benefits</h2>
+<ul>
+<li>Immutability with normal JavaScript objects and arrays. No new APIs to learn!</li>
+<li>Strongly typed, no string based paths selectors etc.</li>
+<li>Structural sharing out of the box</li>
+<li>Object freezing out of the box</li>
+<li>Deep updates are a breeze</li>
+<li>Boilerplate reduction. Less noise, more concise code.</li>
+<li>Small <a href="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/immer/dist/immer.umd.js"><img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/immer/dist/immer.umd.js?compression=gzip" alt="size"></a></li>
+</ul>
+<p>Read further to see all these benefits explained.</p>
+<h2><a class="anchor" aria-hidden="true" id="reducer-example"></a><a href="#reducer-example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reducer Example</h2>
+<p>Here is a simple example of the difference that Immer could make in practice.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// Redux reducer</span>
+<span class="hljs-comment">// Shortened, based on: https://github.com/reactjs/redux/blob/master/examples/shopping-cart/src/reducers/products.js</span>
+<span class="hljs-keyword">const</span> byId = <span class="hljs-function">(<span class="hljs-params">state, action</span>) =&gt;</span> {
+    <span class="hljs-keyword">switch</span> (action.type) {
+        <span class="hljs-keyword">case</span> RECEIVE_PRODUCTS:
+            <span class="hljs-keyword">return</span> {
+                ...state,
+                ...action.products.reduce(<span class="hljs-function">(<span class="hljs-params">obj, product</span>) =&gt;</span> {
+                    obj[product.id] = product
+                    <span class="hljs-keyword">return</span> obj
+                }, {})
+            }
+        <span class="hljs-keyword">default</span>:
+            <span class="hljs-keyword">return</span> state
+    }
+}
+</code></pre>
+<p>After using Immer, that simply becomes:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> byId = <span class="hljs-function">(<span class="hljs-params">state, action</span>) =&gt;</span>
+    produce(state, draft =&gt; {
+        <span class="hljs-keyword">switch</span> (action.type) {
+            <span class="hljs-keyword">case</span> RECEIVE_PRODUCTS:
+                action.products.forEach(<span class="hljs-function"><span class="hljs-params">product</span> =&gt;</span> {
+                    draft[product.id] = product
+                })
+        }
+    })
+</code></pre>
+<p>Notice that it is not needed to handle the default case, a producer that doesn't do anything will simply return the original state.</p>
+<p>Creating Redux reducer is just a sample application of the Immer package. Immer is not just designed to simplify Redux reducers. It can be used in any context where you have an immutable data tree that you want to clone and modify (with structural sharing).</p>
+<p><em>Note: it might be tempting after using producers for a while, to just place <code>produce</code> in your root reducer and then pass the draft to each reducer and work directly over such draft. Don't do that. It kills the point of Redux where each reducer is testable as pure reducer. Immer is best used when applying it to small individual pieces of logic.</em></p>
+<h2><a class="anchor" aria-hidden="true" id="reactsetstate-example"></a><a href="#reactsetstate-example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>React.setState example</h2>
+<p>Deep updates in the state of React components can be greatly simplified as well by using immer. Take for example the following onClick handlers (Try in <a href="https://codesandbox.io/s/m4yp57632j">codesandbox</a>):</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">/**
+ * Classic React.setState with a deep merge
+ */</span>
+onBirthDayClick1 = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">this</span>.setState(<span class="hljs-function"><span class="hljs-params">prevState</span> =&gt;</span> ({
+        <span class="hljs-attr">user</span>: {
+            ...prevState.user,
+            <span class="hljs-attr">age</span>: prevState.user.age + <span class="hljs-number">1</span>
+        }
+    }))
+}
+
+<span class="hljs-comment">/**
+ * ...But, since setState accepts functions,
+ * we can just create a curried producer and further simplify!
+ */</span>
+onBirthDayClick2 = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">this</span>.setState(
+        produce(<span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> {
+            draft.user.age += <span class="hljs-number">1</span>
+        })
+    )
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="currying"></a><a href="#currying" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Currying</h2>
+<p>Passing a function as the first argument to <code>produce</code> is intended to be used for currying. This means that you get a pre-bound producer that only needs a state to produce the value from. The producer function gets passed in the draft and any further arguments that were passed to the curried function.</p>
+<p>For example:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// mapper will be of signature (state, index) =&gt; state</span>
+<span class="hljs-keyword">const</span> mapper = produce(<span class="hljs-function">(<span class="hljs-params">draft, index</span>) =&gt;</span> {
+    draft.index = index
+})
+
+<span class="hljs-comment">// example usage</span>
+<span class="hljs-built_in">console</span>.dir([{}, {}, {}].map(mapper))
+<span class="hljs-comment">//[{index: 0}, {index: 1}, {index: 2}])</span>
+</code></pre>
+<p>This mechanism can also nicely be leveraged to further simplify our example reducer:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> byId = produce(<span class="hljs-function">(<span class="hljs-params">draft, action</span>) =&gt;</span> {
+    <span class="hljs-keyword">switch</span> (action.type) {
+        <span class="hljs-keyword">case</span> RECEIVE_PRODUCTS:
+            action.products.forEach(<span class="hljs-function"><span class="hljs-params">product</span> =&gt;</span> {
+                draft[product.id] = product
+            })
+            <span class="hljs-keyword">return</span>
+    }
+})
+</code></pre>
+<p>Note that <code>state</code> is now factored out (the created reducer will accept a state, and invoke the bound producer with it).</p>
+<p>If you want to initialize an uninitialized state using this construction, you can do so by passing the initial state as second argument to <code>produce</code>:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> byId = produce(
+    <span class="hljs-function">(<span class="hljs-params">draft, action</span>) =&gt;</span> {
+        <span class="hljs-keyword">switch</span> (action.type) {
+            <span class="hljs-keyword">case</span> RECEIVE_PRODUCTS:
+                action.products.forEach(<span class="hljs-function"><span class="hljs-params">product</span> =&gt;</span> {
+                    draft[product.id] = product
+                })
+                <span class="hljs-keyword">return</span>
+        }
+    },
+    {
+        <span class="hljs-number">1</span>: {<span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"product-1"</span>}
+    }
+)
+</code></pre>
+<h5><a class="anchor" aria-hidden="true" id="fun-with-currying"></a><a href="#fun-with-currying" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Fun with currying</h5>
+<p>A random fun example just for inspiration: a neat trick is to turn <code>Object.assign</code> into a producer to create a &quot;spread&quot; function that is smarter than the normal spread operator, as it doesn't produce a new state if the result doesn't actually change (<a href="https://twitter.com/mweststrate/status/1045059430256119809">details &amp; explanation</a>). Quick example:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+<span class="hljs-keyword">const</span> spread = produce(<span class="hljs-built_in">Object</span>.assign)
+
+<span class="hljs-keyword">const</span> base = {<span class="hljs-attr">x</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">1</span>}
+
+<span class="hljs-built_in">console</span>.log({...base, <span class="hljs-attr">y</span>: <span class="hljs-number">1</span>} === base) <span class="hljs-comment">// false</span>
+<span class="hljs-built_in">console</span>.log(spread(base, {<span class="hljs-attr">y</span>: <span class="hljs-number">1</span>}) === base) <span class="hljs-comment">// true! base is recycled as no actual new value was produced</span>
+<span class="hljs-built_in">console</span>.log(spread(base, {<span class="hljs-attr">y</span>: <span class="hljs-number">2</span>}) === base) <span class="hljs-comment">// false, produced a new object as it should</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="patches"></a><a href="#patches" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Patches</h2>
+<p>During the run of a producer, Immer can record all the patches that would replay the changes made by the reducer. This is a very powerful tool if you want to fork your state temporarily and replay the changes to the original.</p>
+<p>Patches are useful in few scenarios:</p>
+<ul>
+<li>To exchange incremental updates with other parties, for example over websockets</li>
+<li>For debugging / traces, to see precisely how state is changed over time</li>
+<li>As basis for undo/redo or as an approach to replay changes on a slightly different state tree</li>
+</ul>
+<p>To help with replaying patches, <code>applyPatches</code> comes in handy. Here is an example how patches could be used to record the incremental updates and (inverse) apply them:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce, {applyPatches} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">let</span> state = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Micheal"</span>,
+    <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>
+}
+
+<span class="hljs-comment">// Let's assume the user is in a wizard, and we don't know whether</span>
+<span class="hljs-comment">// his changes should end up in the base state ultimately or not...</span>
+<span class="hljs-keyword">let</span> fork = state
+<span class="hljs-comment">// all the changes the user made in the wizard</span>
+<span class="hljs-keyword">let</span> changes = []
+<span class="hljs-comment">// the inverse of all the changes made in the wizard</span>
+<span class="hljs-keyword">let</span> inverseChanges = []
+
+fork = produce(
+    fork,
+    draft =&gt; {
+        draft.age = <span class="hljs-number">33</span>
+    },
+    <span class="hljs-comment">// The third argument to produce is a callback to which the patches will be fed</span>
+    (patches, inversePatches) =&gt; {
+        changes.push(...patches)
+        inverseChanges.push(...inversePatches)
+    }
+)
+
+<span class="hljs-comment">// In the meantime, our original state is replaced, as, for example,</span>
+<span class="hljs-comment">// some changes were received from the server</span>
+state = produce(state, draft =&gt; {
+    draft.name = <span class="hljs-string">"Michel"</span>
+})
+
+<span class="hljs-comment">// When the wizard finishes (successfully) we can replay the changes that were in the fork onto the *new* state!</span>
+state = applyPatches(state, changes)
+
+<span class="hljs-comment">// state now contains the changes from both code paths!</span>
+expect(state).toEqual({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Michel"</span>, <span class="hljs-comment">// changed by the server</span>
+    age: <span class="hljs-number">33</span> <span class="hljs-comment">// changed by the wizard</span>
+})
+
+<span class="hljs-comment">// Finally, even after finishing the wizard, the user might change his mind and undo his changes...</span>
+state = applyPatches(state, inverseChanges)
+expect(state).toEqual({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Michel"</span>, <span class="hljs-comment">// Not reverted</span>
+    age: <span class="hljs-number">32</span> <span class="hljs-comment">// Reverted</span>
+})
+</code></pre>
+<p>The generated patches are similar (but not the same) to the <a href="http://tools.ietf.org/html/rfc6902">RFC-6902 JSON patch standard</a>, except that the <code>path</code> property is an array, rather than a string. This makes processing patches easier. If you want to normalize to the official specification, <code>patch.path = patch.path.join(&quot;/&quot;)</code> should do the trick. Anyway, this is what a bunch of patches and their inverse could look like:</p>
+<pre><code class="hljs css language-json">[
+    {
+        <span class="hljs-attr">"op"</span>: <span class="hljs-string">"replace"</span>,
+        <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"profile"</span>],
+        <span class="hljs-attr">"value"</span>: {<span class="hljs-attr">"name"</span>: <span class="hljs-string">"Veria"</span>, <span class="hljs-attr">"age"</span>: <span class="hljs-number">5</span>}
+    },
+    {<span class="hljs-attr">"op"</span>: <span class="hljs-string">"remove"</span>, <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"tags"</span>, <span class="hljs-number">3</span>]}
+]
+</code></pre>
+<pre><code class="hljs css language-json">[
+    {<span class="hljs-attr">"op"</span>: <span class="hljs-string">"replace"</span>, <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"profile"</span>], <span class="hljs-attr">"value"</span>: {<span class="hljs-attr">"name"</span>: <span class="hljs-string">"Noa"</span>, <span class="hljs-attr">"age"</span>: <span class="hljs-number">6</span>}},
+    {<span class="hljs-attr">"op"</span>: <span class="hljs-string">"add"</span>, <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"tags"</span>, <span class="hljs-number">3</span>], <span class="hljs-attr">"value"</span>: <span class="hljs-string">"kiddo"</span>}
+]
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="producewithpatches"></a><a href="#producewithpatches" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>produceWithPatches</code></h3>
+<p>Instead of setting up a patch listener, an easier way to obtain the patches is to use <code>produceWithPatches</code>, which has the same signature as <code>produce</code>, except that it doesn't return just the next state, but a tuple consisting of <code>[nextState, patches, inversePatches]</code>. Like <code>produce</code>, <code>produceWithPatches</code> supports currying as well.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> {produceWithPatches} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> [nextState, patches, inversePatches] = produceWithPatches(
+    {
+        <span class="hljs-attr">age</span>: <span class="hljs-number">33</span>
+    },
+    draft =&gt; {
+        draft.age++
+    }
+)
+</code></pre>
+<p>Which produces:</p>
+<pre><code class="hljs css language-javascript">;[
+    {
+        <span class="hljs-attr">age</span>: <span class="hljs-number">34</span>
+    },
+    [
+        {
+            <span class="hljs-attr">op</span>: <span class="hljs-string">"replace"</span>,
+            <span class="hljs-attr">path</span>: [<span class="hljs-string">"age"</span>],
+            <span class="hljs-attr">value</span>: <span class="hljs-number">34</span>
+        }
+    ],
+    [
+        {
+            <span class="hljs-attr">op</span>: <span class="hljs-string">"replace"</span>,
+            <span class="hljs-attr">path</span>: [<span class="hljs-string">"age"</span>],
+            <span class="hljs-attr">value</span>: <span class="hljs-number">33</span>
+        }
+    ]
+]
+</code></pre>
+<p>For a more in-depth study, see <a href="https://medium.com/@mweststrate/distributing-state-changes-using-snapshots-patches-and-actions-part-2-2f50d8363988">Distributing patches and rebasing actions using Immer</a></p>
+<p>Tip: Check this trick to <a href="https://medium.com/@david.b.edelstein/using-immer-to-compress-immer-patches-f382835b6c69">compress patches</a> produced over time.</p>
+<h2><a class="anchor" aria-hidden="true" id="async-producers"></a><a href="#async-producers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Async producers</h2>
+<p>It is allowed to return Promise objects from recipes. Or, in other words, to use <code>async / await</code>. This can be pretty useful for long running processes, that only produce the new object once the promise chain resolves. Note that <code>produce</code> itself (even in the curried form) will return a promise if the producer is async. Example:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> user = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"michel"</span>,
+    <span class="hljs-attr">todos</span>: []
+}
+
+<span class="hljs-keyword">const</span> loadedUser = <span class="hljs-keyword">await</span> produce(user, <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">draft</span>) </span>{
+    draft.todos = <span class="hljs-keyword">await</span> (<span class="hljs-keyword">await</span> <span class="hljs-built_in">window</span>.fetch(<span class="hljs-string">"http://host/"</span> + draft.name)).json()
+})
+</code></pre>
+<p><em>Warning: please note that the draft shouldn't be 'leaked' from the async process and stored else where. The draft will still be revoked as soon as the async process completes.</em></p>
+<h2><a class="anchor" aria-hidden="true" id="createdraft-and-finishdraft"></a><a href="#createdraft-and-finishdraft" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>createDraft</code> and <code>finishDraft</code></h2>
+<p><code>createDraft</code> and <code>finishDraft</code> are two low-level functions that are mostly useful for libraries that build abstractions on top of immer. It avoids the need to always create a function in order to work with drafts. Instead, one can create a draft, modify it, and at some time in the future finish the draft, in which case the next immutable state will be produced. We could for example rewrite our above example as:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> {createDraft, finishDraft} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> user = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"michel"</span>,
+    <span class="hljs-attr">todos</span>: []
+}
+
+<span class="hljs-keyword">const</span> draft = createDraft(user)
+draft.todos = <span class="hljs-keyword">await</span> (<span class="hljs-keyword">await</span> <span class="hljs-built_in">window</span>.fetch(<span class="hljs-string">"http://host/"</span> + draft.name)).json()
+<span class="hljs-keyword">const</span> loadedUser = finishDraft(draft)
+</code></pre>
+<p>Note: <code>finishDraft</code> takes a <code>patchListener</code> as second argument, which can be used to record the patches, similarly to <code>produce</code>.</p>
+<p><em>Warning: in general, we recommend to use <code>produce</code> instead of the <code>createDraft</code> / <code>finishDraft</code> combo, <code>produce</code> is less error prone in usage, and more clearly separates the concepts of mutability and immutability in your code base.</em></p>
+<h2><a class="anchor" aria-hidden="true" id="returning-data-from-producers"></a><a href="#returning-data-from-producers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returning data from producers</h2>
+<p>It is not needed to return anything from a producer, as Immer will return the (finalized) version of the <code>draft</code> anyway. However, it is allowed to just <code>return draft</code>.</p>
+<p>It is also allowed to return arbitrarily other data from the producer function. But <em>only</em> if you didn't modify the draft. This can be useful to produce an entirely new state. Some examples:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> userReducer = produce(<span class="hljs-function">(<span class="hljs-params">draft, action</span>) =&gt;</span> {
+    <span class="hljs-keyword">switch</span> (action.type) {
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"renameUser"</span>:
+            <span class="hljs-comment">// OK: we modify the current state</span>
+            draft.users[action.payload.id].name = action.payload.name
+            <span class="hljs-keyword">return</span> draft <span class="hljs-comment">// same as just 'return'</span>
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"loadUsers"</span>:
+            <span class="hljs-comment">// OK: we return an entirely new state</span>
+            <span class="hljs-keyword">return</span> action.payload
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"adduser-1"</span>:
+            <span class="hljs-comment">// NOT OK: This doesn't do change the draft nor return a new state!</span>
+            <span class="hljs-comment">// It doesn't modify the draft (it just redeclares it)</span>
+            <span class="hljs-comment">// In fact, this just doesn't do anything at all</span>
+            draft = {<span class="hljs-attr">users</span>: [...draft.users, action.payload]}
+            <span class="hljs-keyword">return</span>
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"adduser-2"</span>:
+            <span class="hljs-comment">// NOT OK: modifying draft *and* returning a new state</span>
+            draft.userCount += <span class="hljs-number">1</span>
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">users</span>: [...draft.users, action.payload]}
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"adduser-3"</span>:
+            <span class="hljs-comment">// OK: returning a new state. But, unnecessary complex and expensive</span>
+            <span class="hljs-keyword">return</span> {
+                <span class="hljs-attr">userCount</span>: draft.userCount + <span class="hljs-number">1</span>,
+                <span class="hljs-attr">users</span>: [...draft.users, action.payload]
+            }
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"adduser-4"</span>:
+            <span class="hljs-comment">// OK: the immer way</span>
+            draft.userCount += <span class="hljs-number">1</span>
+            draft.users.push(action.payload)
+            <span class="hljs-keyword">return</span>
+    }
+})
+</code></pre>
+<p><em>Note: It is not possible to return <code>undefined</code> this way, as it is indistinguishable from <em>not</em> updating the draft! Read on...</em></p>
+<h2><a class="anchor" aria-hidden="true" id="producing-undefined-using-nothing"></a><a href="#producing-undefined-using-nothing" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Producing <code>undefined</code> using <code>nothing</code></h2>
+<p>So, in general, one can replace the current state by just <code>return</code>ing a new value from the producer, rather than modifying the draft. There is a subtle edge case however: if you try to write a producer that wants to replace the current state with <code>undefined</code>:</p>
+<pre><code class="hljs css language-javascript">produce({}, draft =&gt; {
+    <span class="hljs-comment">// don't do anything</span>
+})
+</code></pre>
+<p>Versus:</p>
+<pre><code class="hljs css language-javascript">produce({}, draft =&gt; {
+    <span class="hljs-comment">// Try to return undefined from the producer</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>
+})
+</code></pre>
+<p>The problem is that in JavaScript a function that doesn't return anything also returns <code>undefined</code>! So immer cannot differentiate between those different cases. So, by default, Immer will assume that any producer that returns <code>undefined</code> just tried to modify the draft.</p>
+<p>However, to make it clear to Immer that you intentionally want to produce the value <code>undefined</code>, you can return the built-in token <code>nothing</code>:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce, {nothing} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> state = {
+    <span class="hljs-attr">hello</span>: <span class="hljs-string">"world"</span>
+}
+
+produce(state, draft =&gt; {})
+produce(state, draft =&gt; <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// Both return the original state: { hello: "world"}</span>
+
+produce(state, draft =&gt; nothing)
+<span class="hljs-comment">// Produces a new state, 'undefined'</span>
+</code></pre>
+<p>N.B. Note that this problem is specific for the <code>undefined</code> value, any other value, including <code>null</code>, doesn't suffer from this issue.</p>
+<h2><a class="anchor" aria-hidden="true" id="inline-shortcuts-using-void"></a><a href="#inline-shortcuts-using-void" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Inline shortcuts using <code>void</code></h2>
+<p>Draft mutations in Immer usually warrant a code block, since a return denotes an overwrite. Sometimes that can stretch code a little more than you might be comfortable with.</p>
+<p>In such cases, you can use javascripts <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void"><code>void</code></a> operator, which evaluates expressions and returns <code>undefined</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// Single mutation</span>
+produce(<span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> <span class="hljs-keyword">void</span> (draft.user.age += <span class="hljs-number">1</span>))
+
+<span class="hljs-comment">// Multiple mutations</span>
+produce(<span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> <span class="hljs-keyword">void</span> ((draft.user.age += <span class="hljs-number">1</span>), (draft.user.height = <span class="hljs-number">186</span>)))
+</code></pre>
+<p>Code style is highly personal, but for code bases that are to be understood by many, we recommend to stick to the classic <code>draft =&gt; { draft.user.age += 1}</code> to avoid cognitive overhead.</p>
+<h2><a class="anchor" aria-hidden="true" id="extracting-the-original-object-from-a-proxied-instance"></a><a href="#extracting-the-original-object-from-a-proxied-instance" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Extracting the original object from a proxied instance</h2>
+<p>Immer exposes a named export <code>original</code> that will get the original object from the proxied instance inside <code>produce</code> (or return <code>undefined</code> for unproxied values). A good example of when this can be useful is when searching for nodes in a tree-like state using strict equality.</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> {original} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> baseState = {<span class="hljs-attr">users</span>: [{<span class="hljs-attr">name</span>: <span class="hljs-string">"Richie"</span>}]}
+<span class="hljs-keyword">const</span> nextState = produce(baseState, draftState =&gt; {
+    original(draftState.users) <span class="hljs-comment">// is === baseState.users</span>
+})
+</code></pre>
+<p>Just want to know if a value is a proxied instance? Use the <code>isDraft</code> function!</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> {isDraft} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> baseState = {<span class="hljs-attr">users</span>: [{<span class="hljs-attr">name</span>: <span class="hljs-string">"Bobby"</span>}]}
+<span class="hljs-keyword">const</span> nextState = produce(baseState, draft =&gt; {
+    isDraft(draft) <span class="hljs-comment">// =&gt; true</span>
+    isDraft(draft.users) <span class="hljs-comment">// =&gt; true</span>
+    isDraft(draft.users[<span class="hljs-number">0</span>]) <span class="hljs-comment">// =&gt; true</span>
+})
+isDraft(nextState) <span class="hljs-comment">// =&gt; false</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="auto-freezing"></a><a href="#auto-freezing" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Auto freezing</h2>
+<p>Immer automatically freezes any state trees that are modified using <code>produce</code>. This protects against accidental modifications of the state tree outside of a producer. This comes with a performance impact, so it is recommended to disable this option in production. It is by default enabled. By default, it is turned on during local development and turned off in production. Use <code>setAutoFreeze(true / false)</code> to explicitly turn this feature on or off.</p>
+<p><em>⚠️ If auto freezing is enabled, recipes are not entirely side-effect free: Any plain object or array that ends up in the produced result, will be frozen, even when these objects were not frozen before the start of the producer! ⚠️</em></p>
+<h2><a class="anchor" aria-hidden="true" id="immer-on-older-javascript-environments"></a><a href="#immer-on-older-javascript-environments" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Immer on older JavaScript environments?</h2>
+<p>By default <code>produce</code> tries to use proxies for optimal performance. However, on older JavaScript engines <code>Proxy</code> is not available. For example, when running Microsoft Internet Explorer or React Native (&lt; v0.59) on Android. In such cases, Immer will fallback to an ES5 compatible implementation which works identical, but is a bit slower.</p>
+<h2><a class="anchor" aria-hidden="true" id="importing-immer"></a><a href="#importing-immer" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Importing immer</h2>
+<p><code>produce</code> is exposed as the default export, but optionally it can be used as name import as well, as this benefits some older project setups. So the following imports are all correct, where the first is recommended:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+<span class="hljs-keyword">import</span> {produce} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> {produce} = <span class="hljs-built_in">require</span>(<span class="hljs-string">"immer"</span>)
+<span class="hljs-keyword">const</span> produce = <span class="hljs-built_in">require</span>(<span class="hljs-string">"immer"</span>).produce
+<span class="hljs-keyword">const</span> produce = <span class="hljs-built_in">require</span>(<span class="hljs-string">"immer"</span>).default
+
+<span class="hljs-keyword">import</span> unleashTheMagic <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+<span class="hljs-keyword">import</span> {produce <span class="hljs-keyword">as</span> unleashTheMagic} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="supported-object-types"></a><a href="#supported-object-types" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Supported object types</h2>
+<p>Plain objects and arrays are always drafted by Immer.</p>
+<p>Every other object must use the <code>immerable</code> symbol to mark itself as compatible with Immer. When one of these objects is mutated within a producer, its prototype is preserved between copies.</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> {immerable} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> </span>{
+    [immerable] = <span class="hljs-literal">true</span> <span class="hljs-comment">// Option 1</span>
+
+    <span class="hljs-keyword">constructor</span>() {
+        <span class="hljs-keyword">this</span>[immerable] = <span class="hljs-literal">true</span> <span class="hljs-comment">// Option 2</span>
+    }
+}
+
+Foo[immerable] = <span class="hljs-literal">true</span> <span class="hljs-comment">// Option 3</span>
+</code></pre>
+<p>For arrays, only numeric properties and the <code>length</code> property can be mutated. Custom properties are not preserved on arrays.</p>
+<p>When working with <code>Date</code> objects, you should always create a new <code>Date</code> instance instead of mutating an existing <code>Date</code> object.</p>
+<p>Built-in classes like <code>Map</code> and <code>Set</code> are not supported. As a workaround, you should clone them before mutating them in a producer:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> state = {
+    <span class="hljs-attr">set</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(),
+    <span class="hljs-attr">map</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()
+}
+<span class="hljs-keyword">const</span> nextState = produce(state, draft =&gt; {
+    <span class="hljs-comment">// Don't use any Set methods, as that mutates the instance!</span>
+    draft.set.add(<span class="hljs-string">"foo"</span>) <span class="hljs-comment">// ❌</span>
+
+    <span class="hljs-comment">// 1. Instead, clone the set (just once)</span>
+    <span class="hljs-keyword">const</span> newSet = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(draft.set) <span class="hljs-comment">// ✅</span>
+
+    <span class="hljs-comment">// 2. Mutate the clone (just in this producer)</span>
+    newSet.add(<span class="hljs-string">"foo"</span>)
+
+    <span class="hljs-comment">// 3. Update the draft with the new set</span>
+    draft.set = newSet
+
+    <span class="hljs-comment">// Similarly, don't use any Map methods.</span>
+    draft.map.set(<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>) <span class="hljs-comment">// ❌</span>
+
+    <span class="hljs-comment">// 1. Instead, clone the map (just once)</span>
+    <span class="hljs-keyword">const</span> newMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>(draft.map) <span class="hljs-comment">// ✅</span>
+
+    <span class="hljs-comment">// 2. Mutate it</span>
+    newMap.set(<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>)
+
+    <span class="hljs-comment">// 3. Update the draft</span>
+    draft.map = newMap
+})
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="typescript-or-flow"></a><a href="#typescript-or-flow" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TypeScript or Flow</h2>
+<p>The Immer package ships with type definitions inside the package, which should be picked up by TypeScript and Flow out of the box and without further configuration.</p>
+<p>The TypeScript typings automatically remove <code>readonly</code> modifiers from your draft types and return a value that matches your original type. See this practical example:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">interface</span> State {
+    readonly x: <span class="hljs-built_in">number</span>
+}
+
+<span class="hljs-comment">// `x` cannot be modified here</span>
+<span class="hljs-keyword">const</span> state: State = {
+    x: <span class="hljs-number">0</span>
+}
+
+<span class="hljs-keyword">const</span> newState = produce(state, <span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> {
+    <span class="hljs-comment">// `x` can be modified here</span>
+    draft.x++
+})
+
+<span class="hljs-comment">// `newState.x` cannot be modified here</span>
+</code></pre>
+<p>This ensures that the only place you can modify your state is in your produce callbacks. It even works recursively and with <code>ReadonlyArray</code>s!</p>
+<p>For curried reducers, the type is inferred from the first argument of recipe function, so make sure to type it. The <code>Draft</code> utility type can be used if the state argument type is immutable:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> produce, {Draft} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">interface</span> State {
+    readonly x: <span class="hljs-built_in">number</span>
+}
+
+<span class="hljs-comment">// `x` cannot be modified here</span>
+<span class="hljs-keyword">const</span> state: State = {
+    x: <span class="hljs-number">0</span>
+}
+
+<span class="hljs-keyword">const</span> increment = produce(<span class="hljs-function">(<span class="hljs-params">draft: Draft&lt;State&gt;, inc: <span class="hljs-built_in">number</span></span>) =&gt;</span> {
+    <span class="hljs-comment">// `x` can be modified here</span>
+    draft.x += inc
+})
+
+<span class="hljs-keyword">const</span> newState = increment(state, <span class="hljs-number">2</span>)
+<span class="hljs-comment">// `newState.x` cannot be modified here</span>
+</code></pre>
+<p><strong>Note:</strong> Immer v1.9+ supports TypeScript v3.1+ only.</p>
+<p><strong>Note:</strong> Immer v3.0+ supports TypeScript v3.4+ only.</p>
+<h1><a class="anchor" aria-hidden="true" id="pitfalls"></a><a href="#pitfalls" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Pitfalls</h1>
+<ol>
+<li>Don't redefine draft like, <code>draft = myCoolNewState</code>. Instead, either modify the <code>draft</code> or return a new state. See <a href="#returning-data-from-producers">Returning data from producers</a>.</li>
+<li>Immer assumes your state to be a unidirectional tree. That is, no object should appear twice in the tree, and there should be no circular references.</li>
+<li>Since Immer uses proxies, reading huge amounts of data from state comes with an overhead (especially in the ES5 implementation). If this ever becomes an issue (measure before you optimize!), do the current state analysis before entering the producer function or read from the <code>currentState</code> rather than the <code>draftState</code>. Also, realize that immer is opt-in everywhere, so it is perfectly fine to manually write super performance critical reducers, and use immer for all the normal ones. Also note that <code>original</code> can be used to get the original state of an object, which is cheaper to read.</li>
+<li>Always try to pull <code>produce</code> 'up', for example <code>for (let x of y) produce(base, d =&gt; d.push(x))</code> is exponentially slower than <code>produce(base, d =&gt; { for (let x of y) d.push(x)})</code></li>
+<li>It is possible to return values from producers, except, it is not possible to return <code>undefined</code> that way, as it is indistinguishable from not updating the draft at all! If you want to replace the draft with <code>undefined</code>, just return <code>nothing</code> from the producer.</li>
+</ol>
+<h2><a class="anchor" aria-hidden="true" id="cool-things-built-with-immer"></a><a href="#cool-things-built-with-immer" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Cool things built with immer</h2>
+<ul>
+<li><a href="https://github.com/aweary/react-copy-write">react-copy-write</a> <em>Immutable state with a mutable API</em></li>
+<li><a href="https://github.com/markerikson/redux-starter-kit">redux-starter-kit</a> <em>A simple set of tools to make using Redux easier</em></li>
+<li><a href="https://gist.github.com/kitze/fb65f527803a93fb2803ce79a792fff8">immer based handleActions</a> <em>Boilerplate free actions for Redux</em></li>
+<li><a href="https://github.com/anish000kumar/redux-box">redux-box</a> <em>Modular and easy-to-grasp redux based state management, with least boilerplate</em></li>
+<li><a href="https://github.com/jeffreyyoung/quick-redux">quick-redux</a> <em>tools to make redux development quicker and easier</em></li>
+<li><a href="https://github.com/jamiebuilds/bey">bey</a> <em>Simple immutable state for React using Immer</em></li>
+<li><a href="https://github.com/drcmda/immer-wieder#readme">immer-wieder</a> <em>State management lib that combines React 16 Context and immer for Redux semantics</em></li>
+<li><a href="https://github.com/neurosnap/robodux">robodux</a> <em>flexible way to reduce redux boilerplate</em></li>
+<li><a href="https://github.com/epeli/immer-reducer">immer-reducer</a> <em>Type-safe and terse React (useReducer()) and Redux reducers with Typescript</em></li>
+<li><a href="https://github.com/knpwrs/redux-ts-utils">redux-ts-utils</a> <em>Everything you need to create type-safe applications with Redux with a strong emphasis on simplicity</em></li>
+<li><a href="https://github.com/suchipi/react-state-tree">react-state-tree</a> <em>Drop-in replacement for useState that persists your state into a redux-like state tree</em></li>
+<li><a href="https://github.com/salvoravida/redux-immer">redux-immer</a> <em>is used to create an equivalent function of Redux combineReducers that works with <code>immer</code> state. Like <code>redux-immutable</code> but for <code>immer</code></em></li>
+<li>... and <a href="https://www.npmjs.com/browse/depended/immer">many more</a></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="how-does-immer-work"></a><a href="#how-does-immer-work" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How does Immer work?</h2>
+<p>Read the (second part of the) <a href="https://medium.com/@mweststrate/introducing-immer-immutability-the-easy-way-9d73d8f71cb3">introduction blog</a>.</p>
+<h2><a class="anchor" aria-hidden="true" id="example-patterns"></a><a href="#example-patterns" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example patterns.</h2>
+<p><em>For those who have to go back to thinking in object updates :-)</em></p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-comment">// object mutations</span>
+<span class="hljs-keyword">const</span> todosObj = {
+    <span class="hljs-attr">id1</span>: {<span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">body</span>: <span class="hljs-string">"Take out the trash"</span>},
+    <span class="hljs-attr">id2</span>: {<span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">body</span>: <span class="hljs-string">"Check Email"</span>}
+}
+
+<span class="hljs-comment">// add</span>
+<span class="hljs-keyword">const</span> addedTodosObj = produce(todosObj, draft =&gt; {
+    draft[<span class="hljs-string">"id3"</span>] = {<span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">body</span>: <span class="hljs-string">"Buy bananas"</span>}
+})
+
+<span class="hljs-comment">// delete</span>
+<span class="hljs-keyword">const</span> deletedTodosObj = produce(todosObj, draft =&gt; {
+    <span class="hljs-keyword">delete</span> draft[<span class="hljs-string">"id1"</span>]
+})
+
+<span class="hljs-comment">// update</span>
+<span class="hljs-keyword">const</span> updatedTodosObj = produce(todosObj, draft =&gt; {
+    draft[<span class="hljs-string">"id1"</span>].done = <span class="hljs-literal">true</span>
+})
+
+<span class="hljs-comment">// array mutations</span>
+<span class="hljs-keyword">const</span> todosArray = [
+    {<span class="hljs-attr">id</span>: <span class="hljs-string">"id1"</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">body</span>: <span class="hljs-string">"Take out the trash"</span>},
+    {<span class="hljs-attr">id</span>: <span class="hljs-string">"id2"</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">body</span>: <span class="hljs-string">"Check Email"</span>}
+]
+
+<span class="hljs-comment">// add</span>
+<span class="hljs-keyword">const</span> addedTodosArray = produce(todosArray, draft =&gt; {
+    draft.push({<span class="hljs-attr">id</span>: <span class="hljs-string">"id3"</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">body</span>: <span class="hljs-string">"Buy bananas"</span>})
+})
+
+<span class="hljs-comment">// delete</span>
+<span class="hljs-keyword">const</span> deletedTodosArray = produce(todosArray, draft =&gt; {
+    draft.splice(draft.findIndex(<span class="hljs-function"><span class="hljs-params">todo</span> =&gt;</span> todo.id === <span class="hljs-string">"id1"</span>), <span class="hljs-number">1</span>)
+    <span class="hljs-comment">// or (slower):</span>
+    <span class="hljs-comment">// return draft.filter(todo =&gt; todo.id !== "id1")</span>
+})
+
+<span class="hljs-comment">// update</span>
+<span class="hljs-keyword">const</span> updatedTodosArray = produce(todosArray, draft =&gt; {
+    draft[draft.findIndex(<span class="hljs-function"><span class="hljs-params">todo</span> =&gt;</span> todo.id === <span class="hljs-string">"id1"</span>)].done = <span class="hljs-literal">true</span>
+})
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="performance"></a><a href="#performance" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Performance</h2>
+<p>Here is a <a href="__performance_tests__/todo.js">simple benchmark</a> on the performance of Immer. This test takes 50,000 todo items and updates 5,000 of them. <em>Freeze</em> indicates that the state tree has been frozen after producing it. This is a <em>development</em> best practice, as it prevents developers from accidentally modifying the state tree.</p>
+<p>These tests were executed on Node 9.3.0. Use <code>yarn test:perf</code> to reproduce them locally.</p>
+<p><img src="images/performance.png" alt="performance.png"></p>
+<p>Most important observation:</p>
+<ul>
+<li>Immer with proxies is roughly speaking twice to three times slower as a handwritten reducer (the above test case is worst case, see <code>yarn test:perf</code> for more tests). This is in practice negligible.</li>
+<li>Immer is roughly as fast as ImmutableJS. However, the <em>immutableJS + toJS</em> makes clear the cost that often needs to be paid later; converting the immutableJS objects back to plain objects, to be able to pass them to components, over the network etc... (And there is also the upfront cost of converting data received from e.g. the server to immutable JS)</li>
+<li>Generating patches doesn't significantly slow immer down</li>
+<li>The ES5 fallback implementation is roughly twice as slow as the proxy implementation, in some cases worse.</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="migration"></a><a href="#migration" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Migration</h2>
+<p><strong>Immer 2.* -&gt; 3.0</strong></p>
+<p>In your producers, make sure you're not treating <code>this</code> as the draft. (see here: <a href="https://github.com/immerjs/immer/issues/308">https://github.com/immerjs/immer/issues/308</a>)</p>
+<p>Upgrade to <code>typescript@^3.4</code> if you're a TypeScript user.</p>
+<p><strong>Immer 1.* -&gt; 2.0</strong></p>
+<p>Make sure you don't return any promises as state, because <code>produce</code> will actually invoke the promise and wait until it settles.</p>
+<p><strong>Immer 2.1 -&gt; 2.2</strong></p>
+<p>When using TypeScript, for curried reducers that are typed in the form <code>produce&lt;Type&gt;((arg) =&gt; { })</code>, rewrite this to <code>produce((arg: Type) =&gt; { })</code> or <code>produce((arg: Draft&lt;Type&gt;) =&gt; { })</code> for correct inference.</p>
+<h2><a class="anchor" aria-hidden="true" id="faq"></a><a href="#faq" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>FAQ</h2>
+<p><em>(for those who skimmed the above instead of actually reading)</em></p>
+<p><strong>Q: Does Immer use structural sharing? So that my selectors can be memoized and such?</strong></p>
+<p>A: Yes</p>
+<p><strong>Q: Does Immer support deep updates?</strong></p>
+<p>A: Yes</p>
+<p><strong>Q: I can't rely on Proxies being present on my target environments. Can I use Immer?</strong></p>
+<p>A: Yes</p>
+<p><strong>Q: Can I typecheck my data structures when using Immer?</strong></p>
+<p>A: Yes</p>
+<p><strong>Q: Can I store <code>Date</code> objects, functions etc in my state tree when using Immer?</strong></p>
+<p>A: Yes</p>
+<p><strong>Q: Is it fast?</strong></p>
+<p>A: Yes</p>
+<p><strong>Q: Idea! Can Immer freeze the state for me?</strong></p>
+<p>A: Yes</p>
+<h2><a class="anchor" aria-hidden="true" id="credits"></a><a href="#credits" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Credits</h2>
+<p>Special thanks to @Mendix, which supports its employees to experiment completely freely two full days a month, which formed the kick-start for this project.</p>
+<h2><a class="anchor" aria-hidden="true" id="donations"></a><a href="#donations" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Donations</h2>
+<p>A significant part of my OSS work is unpaid. So <a href="https://mobx.js.org/donate.html">donations</a> are greatly appreciated :)</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-next button" href="/immer/docs/doc2"><span>Next</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#external-resources">External resources</a></li><li><a href="#api">API</a></li><li><a href="#example">Example</a></li><li><a href="#benefits">Benefits</a></li><li><a href="#reducer-example">Reducer Example</a></li><li><a href="#reactsetstate-example">React.setState example</a></li><li><a href="#currying">Currying</a></li><li><a href="#patches">Patches</a><ul class="toc-headings"><li><a href="#producewithpatches"><code>produceWithPatches</code></a></li></ul></li><li><a href="#async-producers">Async producers</a></li><li><a href="#createdraft-and-finishdraft"><code>createDraft</code> and <code>finishDraft</code></a></li><li><a href="#returning-data-from-producers">Returning data from producers</a></li><li><a href="#producing-undefined-using-nothing">Producing <code>undefined</code> using <code>nothing</code></a></li><li><a href="#inline-shortcuts-using-void">Inline shortcuts using <code>void</code></a></li><li><a href="#extracting-the-original-object-from-a-proxied-instance">Extracting the original object from a proxied instance</a></li><li><a href="#auto-freezing">Auto freezing</a></li><li><a href="#immer-on-older-javascript-environments">Immer on older JavaScript environments?</a></li><li><a href="#importing-immer">Importing immer</a></li><li><a href="#supported-object-types">Supported object types</a></li><li><a href="#typescript-or-flow">TypeScript or Flow</a></li><li><a href="#cool-things-built-with-immer">Cool things built with immer</a></li><li><a href="#how-does-immer-work">How does Immer work?</a></li><li><a href="#example-patterns">Example patterns.</a></li><li><a href="#performance">Performance</a></li><li><a href="#migration">Migration</a></li><li><a href="#faq">FAQ</a></li><li><a href="#credits">Credits</a></li><li><a href="#donations">Donations</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/immer/" class="nav-home"><img src="/immer/img/favicon.ico" alt="Immer" width="66" height="58"/></a><div><h5>Docs</h5><a href="/immer/docs/en/doc1.html">Getting Started (or other categories)</a><a href="/immer/docs/en/doc2.html">Guides (or other categories)</a><a href="/immer/docs/en/doc3.html">API Reference (or other categories)</a></div><div><h5>Community</h5><a href="/immer/en/users.html">User Showcase</a><a href="https://stackoverflow.com/questions/tagged/" target="_blank" rel="noreferrer noopener">Stack Overflow</a><a href="https://discordapp.com/">Project Chat</a><a href="https://twitter.com/" target="_blank" rel="noreferrer noopener">Twitter</a></div><div><h5>More</h5><a href="/immer/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/immer/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2019 Michel Weststrate</section></footer></div></body></html>
