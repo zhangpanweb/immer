@@ -1,0 +1,174 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Patches · Immer</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;div id=&quot;codefund&quot;&gt;&lt;!-- fallback content --&gt;&lt;/div&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Patches · Immer"/><meta property="og:type" content="website"/><meta property="og:url" content="https://immerjs.github.io/immer/"/><meta property="og:description" content="&lt;div id=&quot;codefund&quot;&gt;&lt;!-- fallback content --&gt;&lt;/div&gt;"/><meta property="og:image" content="https://immerjs.github.io/immer/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://immerjs.github.io/immer/img/undraw_tweetstorm.svg"/><meta name="robots" content="noindex"/><link rel="shortcut icon" href="/immer/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-65632006-3', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://codefund.io/properties/439/funder.js"></script><script src="/immer/js/scrollSpy.js"></script><link rel="stylesheet" href="/immer/css/main.css"/><script src="/immer/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/immer/"><img class="logo" src="/immer/img/favicon.ico" alt="Immer"/><h2 class="headerTitleWithLogo">Immer</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/immer/docs/introduction" target="_self">Documentation</a></li><li class=""><a href="https://github.com/immerjs/immer" target="_self">GitHub</a></li><li class="siteNavGroupActive"><a href="/immer/docs/support" target="_self">Support Immer</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Advanced Features</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Basics</h3><ul class=""><li class="navListItem"><a class="navItem" href="/immer/docs/introduction">Introduction</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/produce">Using produce</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/curried-produce">Curried producers</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/example-reducer">Example Reducer</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/example-setstate">React setState example</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Advanced Features</h3><ul class=""><li class="navListItem"><a class="navItem" href="/immer/docs/api">API overview</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/typescript">TypeScript / Flow</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/return">Returning new data from producers</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/immer/docs/patches">Patches</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/freezing">Auto freezing</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/original">Original</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/async">Async produce / createDraft</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/complex-objects">Working with classes</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Resources</h3><ul class=""><li class="navListItem"><a class="navItem" href="/immer/docs/performance">Immer performance</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/resources">External resources</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/faq">FAQ</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/pitfalls">Pitfalls</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/built-with">Built with Immer</a></li><li class="navListItem"><a class="navItem" href="/immer/docs/support">Supporting immer</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/immerjs/immer/edit/master/docs/patches.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Patches</h1></header><article><div><span><div id="codefund"><!-- fallback content --></div>
+<p>During the run of a producer, Immer can record all the patches that would replay the changes made by the reducer. This is a very powerful tool if you want to fork your state temporarily and replay the changes to the original.</p>
+<p>Patches are useful in few scenarios:</p>
+<ul>
+<li>To exchange incremental updates with other parties, for example over websockets</li>
+<li>For debugging / traces, to see precisely how state is changed over time</li>
+<li>As basis for undo/redo or as an approach to replay changes on a slightly different state tree</li>
+</ul>
+<p>To help with replaying patches, <code>applyPatches</code> comes in handy. Here is an example how patches could be used to record the incremental updates and (inverse) apply them:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce, {applyPatches} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">let</span> state = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Micheal"</span>,
+    <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>
+}
+
+<span class="hljs-comment">// Let's assume the user is in a wizard, and we don't know whether</span>
+<span class="hljs-comment">// his changes should end up in the base state ultimately or not...</span>
+<span class="hljs-keyword">let</span> fork = state
+<span class="hljs-comment">// all the changes the user made in the wizard</span>
+<span class="hljs-keyword">let</span> changes = []
+<span class="hljs-comment">// the inverse of all the changes made in the wizard</span>
+<span class="hljs-keyword">let</span> inverseChanges = []
+
+fork = produce(
+    fork,
+    draft =&gt; {
+        draft.age = <span class="hljs-number">33</span>
+    },
+    <span class="hljs-comment">// The third argument to produce is a callback to which the patches will be fed</span>
+    (patches, inversePatches) =&gt; {
+        changes.push(...patches)
+        inverseChanges.push(...inversePatches)
+    }
+)
+
+<span class="hljs-comment">// In the meantime, our original state is replaced, as, for example,</span>
+<span class="hljs-comment">// some changes were received from the server</span>
+state = produce(state, draft =&gt; {
+    draft.name = <span class="hljs-string">"Michel"</span>
+})
+
+<span class="hljs-comment">// When the wizard finishes (successfully) we can replay the changes that were in the fork onto the *new* state!</span>
+state = applyPatches(state, changes)
+
+<span class="hljs-comment">// state now contains the changes from both code paths!</span>
+expect(state).toEqual({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Michel"</span>, <span class="hljs-comment">// changed by the server</span>
+    age: <span class="hljs-number">33</span> <span class="hljs-comment">// changed by the wizard</span>
+})
+
+<span class="hljs-comment">// Finally, even after finishing the wizard, the user might change his mind and undo his changes...</span>
+state = applyPatches(state, inverseChanges)
+expect(state).toEqual({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Michel"</span>, <span class="hljs-comment">// Not reverted</span>
+    age: <span class="hljs-number">32</span> <span class="hljs-comment">// Reverted</span>
+})
+</code></pre>
+<p>The generated patches are similar (but not the same) to the <a href="http://tools.ietf.org/html/rfc6902">RFC-6902 JSON patch standard</a>, except that the <code>path</code> property is an array, rather than a string. This makes processing patches easier. If you want to normalize to the official specification, <code>patch.path = patch.path.join(&quot;/&quot;)</code> should do the trick. Anyway, this is what a bunch of patches and their inverse could look like:</p>
+<pre><code class="hljs css language-json">[
+    {
+        <span class="hljs-attr">"op"</span>: <span class="hljs-string">"replace"</span>,
+        <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"profile"</span>],
+        <span class="hljs-attr">"value"</span>: {<span class="hljs-attr">"name"</span>: <span class="hljs-string">"Veria"</span>, <span class="hljs-attr">"age"</span>: <span class="hljs-number">5</span>}
+    },
+    {<span class="hljs-attr">"op"</span>: <span class="hljs-string">"remove"</span>, <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"tags"</span>, <span class="hljs-number">3</span>]}
+]
+</code></pre>
+<pre><code class="hljs css language-json">[
+    {<span class="hljs-attr">"op"</span>: <span class="hljs-string">"replace"</span>, <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"profile"</span>], <span class="hljs-attr">"value"</span>: {<span class="hljs-attr">"name"</span>: <span class="hljs-string">"Noa"</span>, <span class="hljs-attr">"age"</span>: <span class="hljs-number">6</span>}},
+    {<span class="hljs-attr">"op"</span>: <span class="hljs-string">"add"</span>, <span class="hljs-attr">"path"</span>: [<span class="hljs-string">"tags"</span>, <span class="hljs-number">3</span>], <span class="hljs-attr">"value"</span>: <span class="hljs-string">"kiddo"</span>}
+]
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="producewithpatches"></a><a href="#producewithpatches" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>produceWithPatches</code></h3>
+<p>Instead of setting up a patch listener, an easier way to obtain the patches is to use <code>produceWithPatches</code>, which has the same signature as <code>produce</code>, except that it doesn't return just the next state, but a tuple consisting of <code>[nextState, patches, inversePatches]</code>. Like <code>produce</code>, <code>produceWithPatches</code> supports currying as well.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> {produceWithPatches} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> [nextState, patches, inversePatches] = produceWithPatches(
+    {
+        <span class="hljs-attr">age</span>: <span class="hljs-number">33</span>
+    },
+    draft =&gt; {
+        draft.age++
+    }
+)
+</code></pre>
+<p>Which produces:</p>
+<pre><code class="hljs css language-javascript">;[
+    {
+        <span class="hljs-attr">age</span>: <span class="hljs-number">34</span>
+    },
+    [
+        {
+            <span class="hljs-attr">op</span>: <span class="hljs-string">"replace"</span>,
+            <span class="hljs-attr">path</span>: [<span class="hljs-string">"age"</span>],
+            <span class="hljs-attr">value</span>: <span class="hljs-number">34</span>
+        }
+    ],
+    [
+        {
+            <span class="hljs-attr">op</span>: <span class="hljs-string">"replace"</span>,
+            <span class="hljs-attr">path</span>: [<span class="hljs-string">"age"</span>],
+            <span class="hljs-attr">value</span>: <span class="hljs-number">33</span>
+        }
+    ]
+]
+</code></pre>
+<p>For a more in-depth study, see <a href="https://medium.com/@mweststrate/distributing-state-changes-using-snapshots-patches-and-actions-part-2-2f50d8363988">Distributing patches and rebasing actions using Immer</a></p>
+<p>Tip: Check this trick to <a href="https://medium.com/@david.b.edelstein/using-immer-to-compress-immer-patches-f382835b6c69">compress patches</a> produced over time.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/return"><span class="arrow-prev">← </span><span>Returning new data from producers</span></a><a class="docs-next button" href="/immer/docs/freezing"><span>Auto freezing</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/immer/" class="nav-home"><img src="/immer/img/favicon.ico" alt="Immer" width="66" height="58"/></a><div><h5>Docs</h5><a href="/immer/docs/en/doc1.html">Getting Started (or other categories)</a><a href="/immer/docs/en/doc2.html">Guides (or other categories)</a><a href="/immer/docs/en/doc3.html">API Reference (or other categories)</a></div><div><h5>Community</h5><a href="/immer/en/users.html">User Showcase</a><a href="https://stackoverflow.com/questions/tagged/" target="_blank" rel="noreferrer noopener">Stack Overflow</a><a href="https://discordapp.com/">Project Chat</a><a href="https://twitter.com/" target="_blank" rel="noreferrer noopener">Twitter</a></div><div><h5>More</h5><a href="/immer/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/immer/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2019 Michel Weststrate</section></footer></div></body></html>
