@@ -63,6 +63,14 @@
               }
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/immerjs/immer/edit/master/docs/curried-produce.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Curried producers</h1></header><article><div><span><div id="codefund"><!-- fallback content --></div>
+<p><details>
+<summary style="color: white; background:#c200c2;padding:5px;margin:5px;border-radius:2px">egghead.io lesson 6: Simplify code by using curried <em>reduce</em></summary>
+<br>
+<div style="padding:5px;">
+<iframe style="border: none;" width=760 height=427  src="https://egghead.io/lessons/javascript-simplify-immer-producer-functions-using-currying/embed" ></iframe>
+</div>
+<a style="font-style:italic;padding:5px;margin:5px;"  href="https://egghead.io/lessons/javascript-simplify-immer-producer-functions-using-currying">Hosted on egghead.io</a>
+</details></p>
 <p>Passing a function as the first argument to <code>produce</code> is intended to be used for currying. This means that you get a pre-bound producer that only needs a state to produce the value from. The producer function gets passed in the draft and any further arguments that were passed to the curried function.</p>
 <p>For example:</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-comment">// mapper will be of signature (state, index) =&gt; state</span>

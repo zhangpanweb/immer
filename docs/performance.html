@@ -63,6 +63,22 @@
               }
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/immerjs/immer/edit/master/docs/performance.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Immer performance</h1></header><article><div><span><div id="codefund"><!-- fallback content --></div>
+<p><details>
+<summary style="color: white; background:#c200c2;padding:5px;margin:5px;border-radius:2px">egghead.io lesson 5: Leveraging Immer's structural sharing in React</summary>
+<br>
+<div style="padding:5px;">
+<iframe style="border: none;" width=760 height=427  src="https://egghead.io/lessons/react-profile-react-rendering-and-optimize-with-memo-to-leverage-structural-sharing/embed" ></iframe>
+</div>
+<a style="font-style:italic;padding:5px;margin:5px;"  href="https://egghead.io/lessons/react-profile-react-rendering-and-optimize-with-memo-to-leverage-structural-sharing">Hosted on egghead.io</a>
+</details></p>
+<p><details>
+<summary style="color: white; background:#c200c2;padding:5px;margin:5px;border-radius:2px">egghead.io lesson 7: Immer will try to re-cycle data if there was no semantic change</summary>
+<br>
+<div style="padding:5px;">
+<iframe style="border: none;" width=760 height=427  src="https://egghead.io/lessons/javascript-produces-immutable-data-and-avoid-unnecessary-creation-of-new-data-trees-with-immer/embed" ></iframe>
+</div>
+<a style="font-style:italic;padding:5px;margin:5px;"  href="https://egghead.io/lessons/javascript-produces-immutable-data-and-avoid-unnecessary-creation-of-new-data-trees-with-immer">Hosted on egghead.io</a>
+</details></p>
 <p>Here is a <a href="https://github.com/immerjs/immer/blob/master/__performance_tests__/todo.js">simple benchmark</a> on the performance of Immer. This test takes 50,000 todo items and updates 5,000 of them. <em>Freeze</em> indicates that the state tree has been frozen after producing it. This is a <em>development</em> best practice, as it prevents developers from accidentally modifying the state tree.</p>
 <p>Something that isn't reflected in the numbers above, but in reality, Immer is sometimes significantly <em>faster</em> than a hand written reducer. The reason for that is that Immer will detect &quot;no-op&quot; state changes, and return the original state if nothing actually changed, which can avoid a lot of re-renderings for example. Cases are known where simply applying immer solved critical performance issues.</p>
 <p>These tests were executed on Node 10.15.1. Use <code>yarn test:perf</code> to reproduce them locally.</p>
@@ -71,7 +87,7 @@
 <ul>
 <li>Immer with proxies is roughly speaking twice to three times slower as a handwritten reducer (the above test case is worst case, see <code>yarn test:perf</code> for more tests). This is in practice negligible.</li>
 <li>Immer is roughly as fast as ImmutableJS. However, the <em>immutableJS + toJS</em> makes clear the cost that often needs to be paid later; converting the immutableJS objects back to plain objects, to be able to pass them to components, over the network etc... (And there is also the upfront cost of converting data received from e.g. the server to immutable JS)</li>
-<li>Generating patches doesn't significantly slow immer down</li>
+<li>Generating patches doesn't significantly slow down immer</li>
 <li>The ES5 fallback implementation is roughly twice as slow as the proxy implementation, in some cases worse.</li>
 </ul>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/complex-objects"><span class="arrow-prev">← </span><span>Working with classes</span></a><a class="docs-next button" href="/immer/docs/resources"><span>External resources</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2019 Michel Weststrate</section></footer></div></body></html>
