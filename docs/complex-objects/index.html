@@ -63,7 +63,41 @@
               }
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/immerjs/immer/edit/master/docs/complex-objects.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Working with classes</h1></header><article><div><span><div id="codefund"><!-- fallback content --></div>
-<p>Plain objects, arrays, <code>Map</code>s and <code>Set</code>s are always drafted by Immer.</p>
+<p>Plain objects, arrays, <code>Map</code>s and <code>Set</code>s are always drafted by Immer. An example of using Maps with immer:</p>
+<pre><code class="hljs css language-javascript">test(<span class="hljs-string">"Producers can update Maps"</span>, () =&gt; {
+    <span class="hljs-keyword">const</span> usersById_v1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()
+
+    <span class="hljs-keyword">const</span> usersById_v2 = produce(usersById_v1, draft =&gt; {
+        <span class="hljs-comment">// Modifying a map results in a new map</span>
+        draft.set(<span class="hljs-string">"michel"</span>, {<span class="hljs-attr">name</span>: <span class="hljs-string">"Michel Weststrate"</span>, <span class="hljs-attr">country</span>: <span class="hljs-string">"NL"</span>})
+    })
+
+    <span class="hljs-keyword">const</span> usersById_v3 = produce(usersById_v2, draft =&gt; {
+        <span class="hljs-comment">// Making a change deep inside a map, results in a new map as well!</span>
+        draft.get(<span class="hljs-string">"michel"</span>).country = <span class="hljs-string">"UK"</span>
+    })
+
+    expect(usersById_v2).not.toBe(usersById_v1)
+    expect(usersById_v3).not.toBe(usersById_v2)
+    expect(usersById_v1).toMatchInlineSnapshot(<span class="hljs-string">`Map {}`</span>)
+    expect(usersById_v2).toMatchInlineSnapshot(<span class="hljs-string">`
+        Map {
+          "michel" =&gt; Object {
+            "country": "NL",
+            "name": "Michel Weststrate",
+          },
+        }
+    `</span>)
+    expect(usersById_v3).toMatchInlineSnapshot(<span class="hljs-string">`
+        Map {
+          "michel" =&gt; Object {
+            "country": "UK",
+            "name": "Michel Weststrate",
+          },
+        }
+    `</span>)
+})
+</code></pre>
 <p>Every other object must use the <code>immerable</code> symbol to mark itself as compatible with Immer. When one of these objects is mutated within a producer, its prototype is preserved between copies.</p>
 <pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> {immerable} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
 
