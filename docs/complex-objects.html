@@ -63,7 +63,7 @@
               }
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/immerjs/immer/edit/master/docs/complex-objects.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Working with classes</h1></header><article><div><span><div id="codefund"><!-- fallback content --></div>
-<p>Plain objects and arrays are always drafted by Immer.</p>
+<p>Plain objects, arrays, <code>Map</code>s and <code>Set</code>s are always drafted by Immer.</p>
 <p>Every other object must use the <code>immerable</code> symbol to mark itself as compatible with Immer. When one of these objects is mutated within a producer, its prototype is preserved between copies.</p>
 <pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> {immerable} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
 
@@ -79,35 +79,5 @@ Foo[immerable] = <span class="hljs-literal">true</span> <span class="hljs-commen
 </code></pre>
 <p>For arrays, only numeric properties and the <code>length</code> property can be mutated. Custom properties are not preserved on arrays.</p>
 <p>When working with <code>Date</code> objects, you should always create a new <code>Date</code> instance instead of mutating an existing <code>Date</code> object.</p>
-<p>Built-in classes like <code>Map</code> and <code>Set</code> are not yet supported (they might be if there is popular demand). As a workaround, you should clone them before mutating them in a producer:</p>
-<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> state = {
-    <span class="hljs-attr">set</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(),
-    <span class="hljs-attr">map</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()
-}
-<span class="hljs-keyword">const</span> nextState = produce(state, draft =&gt; {
-    <span class="hljs-comment">// Don't use any Set methods, as that mutates the instance!</span>
-    draft.set.add(<span class="hljs-string">"foo"</span>) <span class="hljs-comment">// ❌</span>
-
-    <span class="hljs-comment">// 1. Instead, clone the set (just once)</span>
-    <span class="hljs-keyword">const</span> newSet = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(draft.set) <span class="hljs-comment">// ✅</span>
-
-    <span class="hljs-comment">// 2. Mutate the clone (just in this producer)</span>
-    newSet.add(<span class="hljs-string">"foo"</span>)
-
-    <span class="hljs-comment">// 3. Update the draft with the new set</span>
-    draft.set = newSet
-
-    <span class="hljs-comment">// Similarly, don't use any Map methods.</span>
-    draft.map.set(<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>) <span class="hljs-comment">// ❌</span>
-
-    <span class="hljs-comment">// 1. Instead, clone the map (just once)</span>
-    <span class="hljs-keyword">const</span> newMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>(draft.map) <span class="hljs-comment">// ✅</span>
-
-    <span class="hljs-comment">// 2. Mutate it</span>
-    newMap.set(<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>)
-
-    <span class="hljs-comment">// 3. Update the draft</span>
-    draft.map = newMap
-})
-</code></pre>
+<p>Maps and Sets that are produced by Immer will be made artificially immutable. This means that they will throw an exception when trying mutative methods like <code>set</code>, <code>clear</code> etc. outside a producer.</p>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/async"><span class="arrow-prev">← </span><span class="function-name-prevnext">Async produce / createDraft</span></a><a class="docs-next button" href="/immer/docs/performance"><span>Immer performance</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2019 Michel Weststrate</section></footer></div></body></html>

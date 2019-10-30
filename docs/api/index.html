@@ -81,6 +81,7 @@
 <tr><td><code>original</code></td><td>Given a draft object (doesn't have to be a tree root), returns the the original object at the same path in the original state tree, if present</td><td><a href="/immer/docs/original">Original</a></td></tr>
 <tr><td><code>Patch</code></td><td>Exposed TypeScript type, describes the shape of an (inverse) patch object</td><td><a href="/immer/docs/patches">Patches</a></td></tr>
 <tr><td><code>produce</code></td><td>The core API of Immer, also exposed as the <code>default</code> export</td><td><a href="/immer/docs/produce">Produce</a></td></tr>
+<tr><td><code>produceWithPatches</code></td><td>Works the same as <code>produce</code>, but instead of just returning the produced object, it returns a tuple, consisting of <code>[result, patches, inversePatches]</code>.</td><td><a href="/immer/docs/patches">Patches</a></td></tr>
 <tr><td><code>setAutoFreeze</code></td><td>Enables / disables automatic freezing of the trees produces. By default enabled in development builds</td><td><a href="/immer/docs/freezing">Freezing</a></td></tr>
 <tr><td><code>setUseProxies</code></td><td>Can be used to disable or force the use of <code>Proxy</code> objects. Useful when filing bug reports.</td><td></td></tr>
 </tbody>
