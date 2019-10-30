@@ -77,8 +77,10 @@
         draft.get(<span class="hljs-string">"michel"</span>).country = <span class="hljs-string">"UK"</span>
     })
 
+    <span class="hljs-comment">// We got a new map each time!</span>
     expect(usersById_v2).not.toBe(usersById_v1)
     expect(usersById_v3).not.toBe(usersById_v2)
+    <span class="hljs-comment">// With different content obviously</span>
     expect(usersById_v1).toMatchInlineSnapshot(<span class="hljs-string">`Map {}`</span>)
     expect(usersById_v2).toMatchInlineSnapshot(<span class="hljs-string">`
         Map {
@@ -96,6 +98,12 @@
           },
         }
     `</span>)
+    <span class="hljs-comment">// The old one was never modified</span>
+    expect(usersById_v1.size).toBe(<span class="hljs-number">0</span>)
+    <span class="hljs-comment">// And trying to change a Map outside a producers is going to: NO!</span>
+    expect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> usersById_v3.clear()).toThrowErrorMatchingInlineSnapshot(
+        <span class="hljs-string">`"This object has been frozen and should not be mutated"`</span>
+    )
 })
 </code></pre>
 <p>Every other object must use the <code>immerable</code> symbol to mark itself as compatible with Immer. When one of these objects is mutated within a producer, its prototype is preserved between copies.</p>
