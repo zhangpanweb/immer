@@ -1,6 +1,6 @@
 import * as legacyProxy from "./es5"
 import * as modernProxy from "./proxy"
-import {applyPatches, generatePatches} from "./patches"
+import { applyPatches, generatePatches } from "./patches"
 import {
 	assign,
 	each,
@@ -17,12 +17,13 @@ import {
 	NOTHING,
 	freeze
 } from "./common"
-import {ImmerScope} from "./scope"
+import { ImmerScope } from "./scope"
 
-function verifyMinified() {}
+function verifyMinified() { }
 
 const configDefaults = {
 	useProxies:
+		// 判断环境中是否能够使用原生Proxy
 		typeof Proxy !== "undefined" &&
 		typeof Proxy.revocable !== "undefined" &&
 		typeof Reflect !== "undefined",
@@ -45,10 +46,22 @@ export class Immer {
 	produce(base, recipe, patchListener) {
 		// curried invocation
 		if (typeof base === "function" && typeof recipe !== "function") {
+			// 如果 base 传入 function，则返回一个柯里化函数
 			const defaultBase = recipe
 			recipe = base
 
 			const self = this
+			/**
+			 * 比如 
+			 * const mapper = produce((draft, index) => {
+			 * 		draft.index = index
+			 * })
+			 * console.dir([{}, {}, {}].map(mapper))
+			 * 
+			 * 则 curriedProduce(base = defaultBase, ...args) 中 base 是 {} map方法中的 element 参数，...args 是 index 和 arr 参数
+			 * self.produce(base, draft => recipe.call(this, draft, ...args)) 中 base 是 {} , recipe 是
+			 * (draft, index) => { draft.index = index }
+			 */
 			return function curriedProduce(base = defaultBase, ...args) {
 				return self.produce(base, draft => recipe.call(this, draft, ...args)) // prettier-ignore
 			}
@@ -57,6 +70,7 @@ export class Immer {
 		// prettier-ignore
 		{
 			if (typeof recipe !== "function") {
+				// 说明 recipe !== "function" ，加上上面的判断，可以知道 base !== "function"
 				throw new Error("The first or second argument to `produce` must be a function")
 			}
 			if (patchListener !== undefined && typeof patchListener !== "function") {
@@ -72,13 +86,26 @@ export class Immer {
 			const proxy = this.createProxy(base)
 			let hasError = true
 			try {
+				/**
+				 * 传入 proxy 作为参数，比如
+				 * const nextState = produce(baseState, draftState => {
+				 * 		draftState.push({ todo: "Tweet about it" })
+				 * 		draftState[1].done = true
+				 * })
+				 * 最终操作是 
+				 * const nextState = produce(baseState, proxy => {
+				 * 		proxy.push({ todo: "Tweet about it" })
+				 * 		proxy[1].done = true
+				 * })
+				 */
 				result = recipe(proxy)
 				hasError = false
 			} finally {
 				// finally instead of catch + rethrow better preserves original stack
-				if (hasError) scope.revoke()
+				if (hasError) scope.revoke() // 出现错误，则取消代理
 				else scope.leave()
 			}
+			// 若内部执行结果返回 Promise，则 produce 返回 Promise
 			if (typeof Promise !== "undefined" && result instanceof Promise) {
 				return result.then(
 					result => {
@@ -91,6 +118,7 @@ export class Immer {
 					}
 				)
 			}
+			// 注册 patchListener
 			scope.usePatches(patchListener)
 			return this.processResult(result, scope)
 		} else {
@@ -135,7 +163,7 @@ export class Immer {
 		if (state.finalized) {
 			throw new Error("The given draft is already finalized") // prettier-ignore
 		}
-		const {scope} = state
+		const { scope } = state
 		scope.usePatches(patchListener)
 		return this.processResult(undefined, scope)
 	}
@@ -144,6 +172,7 @@ export class Immer {
 	}
 	setUseProxies(value) {
 		this.useProxies = value
+		// 将 modernProxy 或者 legacyProxy 中的 proxy 方法绑定在 this 上
 		assign(this, value ? modernProxy : legacyProxy)
 	}
 	applyPatches(base, patches) {
@@ -169,7 +198,7 @@ export class Immer {
 	}
 	/** @internal */
 	processResult(result, scope) {
-		const baseDraft = scope.drafts[0]
+		const baseDraft = scope.drafts[0] // 得到的是 最上层的proxy
 		const isReplaced = result !== undefined && result !== baseDraft
 		this.willFinalize(scope, result, isReplaced)
 		if (isReplaced) {
@@ -196,6 +225,9 @@ export class Immer {
 			}
 		} else {
 			// Finalize the base draft.
+			// 将 baseDraft 变为一个plain值
+			// 如果内部属性是 plain 值，可以简单理解为直接返回
+			// 如果是一个 proxy，则处理为对应的 plain 值
 			result = this.finalize(baseDraft, [], scope)
 		}
 		scope.revoke()
@@ -231,13 +263,13 @@ export class Immer {
 			if (this.onDelete && !isSet(state.base)) {
 				// The `assigned` object is unreliable with ES5 drafts.
 				if (this.useProxies) {
-					const {assigned} = state
+					const { assigned } = state
 					each(assigned, (prop, exists) => {
 						if (!exists) this.onDelete(state, prop)
 					})
 				} else {
 					// TODO: Figure it out for Maps and Sets if we need to support ES5
-					const {base, copy} = state
+					const { base, copy } = state
 					each(base, prop => {
 						if (!has(copy, prop)) this.onDelete(state, prop)
 					})
@@ -276,6 +308,7 @@ export class Immer {
 		const needPatches = !!rootPath && !!scope.patches
 		const finalizeProperty = (prop, value, parent) => {
 			if (value === parent) {
+				// 禁止循环引用
 				throw Error("Immer forbids circular references")
 			}
 
@@ -286,14 +319,16 @@ export class Immer {
 			if (isDraft(value)) {
 				const path =
 					isDraftProp &&
-					needPatches &&
-					!isSetMember && // Set objects are atomic since they have no keys.
-					!has(state.assigned, prop) // Skip deep patches for assigned keys.
+						needPatches &&
+						!isSetMember && // Set objects are atomic since they have no keys.
+						!has(state.assigned, prop) // Skip deep patches for assigned keys.
 						? rootPath.concat(prop)
 						: null
 
 				// Drafts owned by `scope` are finalized here.
+				// 循环 finalize，获取最终 finalize后的值
 				value = this.finalize(value, path, scope)
+				// 将最终finalize的值替换给parent
 				replace(parent, prop, value)
 
 				// Drafts from another scope must prevent auto-freezing.
@@ -305,6 +340,7 @@ export class Immer {
 				if (isDraftProp && value === get(state.base, prop)) return
 			}
 			// Unchanged draft properties are ignored.
+			// 如果属性没有变化，则忽略
 			else if (isDraftProp && is(value, get(state.base, prop))) {
 				return
 			}
@@ -329,17 +365,24 @@ export class Immer {
 	}
 }
 
+/**
+ * 将 parent 的 prop 属性值替换为 value 值
+ */
 function replace(parent, prop, value) {
 	if (isMap(parent)) {
+		// 是 Map，则直接 set 新增或覆盖
 		parent.set(prop, value)
 	} else if (isSet(parent)) {
 		// In this case, the `prop` is actually a draft.
+		// 是 Set，先 delete，再 add
 		parent.delete(prop)
 		parent.add(value)
 	} else if (Array.isArray(parent) || isEnumerable(parent, prop)) {
 		// Preserve non-enumerable properties.
+		// Array 直接覆盖，但是保留不可枚举属性
 		parent[prop] = value
 	} else {
+		// 否则使用 defineProperty 重写
 		Object.defineProperty(parent, prop, {
 			value,
 			writable: true,

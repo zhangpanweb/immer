@@ -1,4 +1,4 @@
-import {Immer} from "./immer"
+import { Immer } from "./immer"
 
 const immer = new Immer()
 
@@ -76,4 +76,4 @@ export {
 	DRAFTABLE as immerable
 } from "./common"
 
-export {Immer}
+export { Immer }

@@ -1,4 +1,4 @@
-import {DRAFT_STATE} from "./common"
+import { DRAFT_STATE } from "./common"
 
 /** Each scope represents a `produce` call. */
 export class ImmerScope {
@@ -22,10 +22,12 @@ export class ImmerScope {
 	}
 	revoke() {
 		this.leave()
+		// 清空 drafts
 		this.drafts.forEach(revoke)
 		this.drafts = null // Make draft-related methods throw.
 	}
 	leave() {
+		// 将 current 重置为 parent
 		if (this === ImmerScope.current) {
 			ImmerScope.current = this.parent
 		}
@@ -33,7 +35,7 @@ export class ImmerScope {
 }
 
 ImmerScope.current = null
-ImmerScope.enter = function() {
+ImmerScope.enter = function () {
 	return (this.current = new ImmerScope(this.current))
 }
 

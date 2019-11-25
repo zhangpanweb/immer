@@ -1,7 +1,7 @@
 export const NOTHING =
 	typeof Symbol !== "undefined"
 		? Symbol("immer-nothing")
-		: {["immer-nothing"]: true}
+		: { ["immer-nothing"]: true }
 
 export const DRAFTABLE =
 	typeof Symbol !== "undefined" && Symbol.for
@@ -17,6 +17,9 @@ export function isDraft(value) {
 	return !!value && !!value[DRAFT_STATE]
 }
 
+/**
+ * 判断值是 plain object（包括数组） 或者 Map 或者 Set 或者 immer内部构造的对象
+ */
 export function isDraftable(value) {
 	if (!value) return false
 	return (
@@ -29,9 +32,14 @@ export function isDraftable(value) {
 }
 
 export function isPlainObject(value) {
+	// 如果value不存在或者类型不是Object，返回false
 	if (!value || typeof value !== "object") return false
+	// 是数组，返回 true
 	if (Array.isArray(value)) return true
 	const proto = Object.getPrototypeOf(value)
+	// 是 typeof value === "object" 并且 
+	// proto 不存在，用 Object.create(null)创建的对象
+	// proto === Object.prototype 说明是直接的对象，不是由其他构造函数构造的
 	return !proto || proto === Object.prototype
 }
 
@@ -70,36 +78,54 @@ export const assign =
 		return target
 	})
 
+/**
+ * ownKeys方法
+ * 如果环境中有 Reflect，则使用 Reflect.ownKeys
+ * 否则，如果环境中有 Object.getOwnPropertySymbols 方法，则通过 getOwnPropertyNames 和 getOwnPropertySymbols，获取属性名和Symbol属性的集合
+ * 否则，获取全部属性名
+ */
 export const ownKeys =
 	typeof Reflect !== "undefined" && Reflect.ownKeys
 		? Reflect.ownKeys
 		: typeof Object.getOwnPropertySymbols !== "undefined"
-		? obj =>
+			? obj =>
 				Object.getOwnPropertyNames(obj).concat(
 					Object.getOwnPropertySymbols(obj)
 				)
-		: Object.getOwnPropertyNames
+			: Object.getOwnPropertyNames
 
+/**
+ * 浅复制
+ */
 export function shallowCopy(base, invokeGetters = false) {
+	// 如果是 Array ，直接通过 slice 方法复制
 	if (Array.isArray(base)) return base.slice()
+
 	if (isMap(base)) return new Map(base)
 	if (isSet(base)) return new Set(base)
+
+	// clone，设置原型
 	const clone = Object.create(Object.getPrototypeOf(base))
+	// 复制属性
 	ownKeys(base).forEach(key => {
 		if (key === DRAFT_STATE) {
 			return // Never copy over draft state.
 		}
 		const desc = Object.getOwnPropertyDescriptor(base, key)
-		let {value} = desc
+		let { value } = desc
+
+		// 复制getter
 		if (desc.get) {
 			if (!invokeGetters) {
 				throw new Error("Immer drafts cannot have computed properties")
 			}
 			value = desc.get.call(base)
 		}
+		// 复制可枚举属性
 		if (desc.enumerable) {
 			clone[key] = value
 		} else {
+			// 通过 defineProperty 定义其他属性
 			Object.defineProperty(clone, key, {
 				value,
 				writable: true,
@@ -112,8 +138,10 @@ export function shallowCopy(base, invokeGetters = false) {
 
 export function each(obj, iter) {
 	if (Array.isArray(obj) || isMap(obj) || isSet(obj)) {
+		// 如果是 Array、Map、Set，使用原生的 forEach 方法
 		obj.forEach((entry, index) => iter(index, entry, obj))
 	} else {
+		// 否则keys数组然后 forEach
 		ownKeys(obj).forEach(key => iter(key, obj[key], obj))
 	}
 }
@@ -123,6 +151,10 @@ export function isEnumerable(base, prop) {
 	return !!desc && desc.enumerable
 }
 
+/**
+ * 判断是否 thing 是否有 prop
+ * 是 Map则用 has 判断，否则使用 Object.prototype.hasOwnProperty
+ */
 export function has(thing, prop) {
 	return isMap(thing)
 		? thing.has(prop)
@@ -138,6 +170,7 @@ export function is(x, y) {
 	if (x === y) {
 		return x !== 0 || 1 / x === 1 / y
 	} else {
+		// 处理 NaN
 		return x !== x && y !== y
 	}
 }
@@ -146,12 +179,18 @@ export const hasSymbol = typeof Symbol !== "undefined"
 
 export const hasMap = typeof Map !== "undefined"
 
+/**
+ * 判断值是 Map 类型
+ */
 export function isMap(target) {
 	return hasMap && target instanceof Map
 }
 
 export const hasSet = typeof Set !== "undefined"
 
+/**
+ * 判断值是 Map 类型
+ */
 export function isSet(target) {
 	return hasSet && target instanceof Set
 }
@@ -230,14 +269,19 @@ export function clone(obj) {
 	return cloned
 }
 
+/**
+ * freeze obj
+ */
 export function freeze(obj, deep = false) {
 	if (!isDraftable(obj) || isDraft(obj) || Object.isFrozen(obj)) return
+	// Set 和 Map 通过重写对应方法实现 freeze
 	if (isSet(obj)) {
 		obj.add = obj.clear = obj.delete = dontMutateFrozenCollections
 	} else if (isMap(obj)) {
 		obj.set = obj.clear = obj.delete = dontMutateFrozenCollections
 	}
 	Object.freeze(obj)
+	// 如果 deep = true，则循环 freeze 其属性值
 	if (deep) each(obj, (_, value) => freeze(value, true))
 }
 

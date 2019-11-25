@@ -18,10 +18,10 @@ import {
 	iterateMapValues,
 	makeIterateSetValues
 } from "./common"
-import {ImmerScope} from "./scope"
+import { ImmerScope } from "./scope"
 
 // Do nothing before being finalized.
-export function willFinalize() {}
+export function willFinalize() { }
 
 /**
  * Returns a new draft of the `base` object.
@@ -72,7 +72,7 @@ export function createProxy(base, parent) {
 		state.drafts = new Map()
 	}
 
-	const {revoke, proxy} = Proxy.revocable(target, traps)
+	const { revoke, proxy } = Proxy.revocable(target, traps)
 
 	state.draft = proxy
 	state.revoke = revoke
@@ -87,10 +87,12 @@ export function createProxy(base, parent) {
 
 const objectTraps = {
 	get(state, prop) {
+		// state 即为 createProxy 中的 state
 		if (prop === DRAFT_STATE) return state
-		let {drafts} = state
+		let { drafts } = state
 
 		// Check for existing draft in unmodified state.
+		// 如果已经被改动，并且包含需要改动的属性，则直接返回对应属性值
 		if (!state.modified && has(drafts, prop)) {
 			return drafts[prop]
 		}
@@ -128,7 +130,9 @@ const objectTraps = {
 			if (isUnchanged) return true
 			markChanged(state)
 		}
+		// 更新 state.assigned，记录已更新过的内容
 		state.assigned[prop] = true
+		// 更新 copy 为最新值
 		state.copy[prop] = value
 		return true
 	},
@@ -171,19 +175,20 @@ const objectTraps = {
  */
 
 const arrayTraps = {}
+// 将 objectTraps 的值依次赋给 arrayTraps
 each(objectTraps, (key, fn) => {
-	arrayTraps[key] = function() {
+	arrayTraps[key] = function () {
 		arguments[0] = arguments[0][0]
 		return fn.apply(this, arguments)
 	}
 })
-arrayTraps.deleteProperty = function(state, prop) {
+arrayTraps.deleteProperty = function (state, prop) {
 	if (isNaN(parseInt(prop))) {
 		throw new Error("Immer only supports deleting array indices") // prettier-ignore
 	}
 	return objectTraps.deleteProperty.call(this, state[0], prop)
 }
-arrayTraps.set = function(state, prop, value) {
+arrayTraps.set = function (state, prop, value) {
 	if (prop !== "length" && isNaN(parseInt(prop))) {
 		throw new Error("Immer only supports setting array indices and the 'length' property") // prettier-ignore
 	}
@@ -319,13 +324,20 @@ function peek(draft, prop) {
 	return desc && desc.value
 }
 
+/**
+ * 如果 state 已经被改动过，则 produce 最终需要返回的是一个新的 对象
+ * 此方法：
+ * - 将 modified 置为 true，表示已经被更新过
+ * - shallowCopy base，使用 drafts 中的内容覆盖 copy，然后存放在 state.copy 中
+ */
 function markChanged(state) {
 	if (!state.modified) {
 		state.modified = true
 
-		const {base, drafts, parent} = state
+		const { base, drafts, parent } = state
 		const copy = shallowCopy(base)
 
+		// 使用 drafts 中属性覆盖 copy 中的属性，只覆盖 drafts 中有的，copy 中有但是 drafts 中没有的属性不影响
 		if (isSet(base)) {
 			// Note: The `drafts` property is preserved for Set objects, since
 			// we need to keep track of which values are drafted.
@@ -337,6 +349,7 @@ function markChanged(state) {
 			state.drafts = null
 		}
 
+		// state.copy 中一直保存着最新的内容
 		state.copy = copy
 		if (parent) {
 			markChanged(parent)
